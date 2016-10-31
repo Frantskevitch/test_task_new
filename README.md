@@ -9,4 +9,4 @@ jenkins available here http://hostname:8080
 
 deployed application http://hostname:8081/hello/
 
-credentiald from tomcat: username- tomcat password- 123456
+credentials from tomcat: username- tomcat password- 123456
