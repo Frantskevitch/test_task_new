@@ -1,0 +1,13 @@
+- job:
+    name: build-jaj-ops-sample-app
+    project-type: maven
+    scm:
+      - git:
+          url: 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git'
+          skip-tag: true
+          branches:
+            - '*/master'
+    maven:
+      root-pom: pom.xml
+      goals: tomcat:deploy -X -Dmaven.tomcat.url=http://tomcat:8080/manager/text -Dtomcat.username=tomcat -Dtomcat.password=123456 
+

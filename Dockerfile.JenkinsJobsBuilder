@@ -1,0 +1,11 @@
+FROM centos:7.2.1511
+USER root
+RUN yum install -y epel-release
+RUN yum install -y python-pip
+RUN pip install PyYAML python-jenkins
+RUN pip install jenkins-job-builder
+COPY resource/boxfuse-sample-java-war-hello-build.yaml /opt/boxfuse-sample-java-war-hello-build.yaml
+COPY resource/jenkins_jobs_config.ini /opt/jenkins_jobs_config.ini
+COPY resource/jenkins_job_build.sh /opt/jenkins_job_build.sh
+RUN chmod +x /opt/jenkins_job_build.sh
+CMD  /opt/jenkins_job_build.sh

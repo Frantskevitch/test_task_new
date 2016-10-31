@@ -1,0 +1,10 @@
+FROM centos:7.2.1511 
+USER root
+RUN yum update -y
+RUN yum install -y java-1.7.0-openjdk.x86_64
+RUN yum install -y git maven
+RUN rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+RUN rpm -i http://pkg.jenkins-ci.org/redhat/jenkins-1.658-1.1.noarch.rpm
+COPY /resource/hudson.tasks.Maven.xml /root/.jenkins/hudson.tasks.Maven.xml
+ENTRYPOINT java -jar /usr/lib/jenkins/jenkins.war 
+

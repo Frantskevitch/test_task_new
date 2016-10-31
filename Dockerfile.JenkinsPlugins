@@ -1,0 +1,10 @@
+FROM centos:7.2.1511
+USER root
+RUN groupadd -g 1000 jenkins \
+    && useradd -d "/home/jenkins" -u 1000 -g 1000 -m -s /bin/bash jenkins
+RUN mkdir -p /root/.jenkins/plugins
+ADD resource/plugins/ /root/.jenkins/plugins
+RUN chown jenkins. /root/.jenkins/plugins
+VOLUME [ "/root/.jenkins/plugins" ]
+ENTRYPOINT sleep infinity
+

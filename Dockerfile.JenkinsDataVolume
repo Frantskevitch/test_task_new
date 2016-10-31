@@ -1,0 +1,11 @@
+FROM centos:7.2.1511
+
+RUN groupadd -g 1000 jenkins \
+    && useradd -d "/home/jenkins" -u 1000 -g 1000 -m -s /bin/bash jenkins
+
+RUN mkdir -p /home/jenkins
+RUN chown -R jenkins. /home/jenkins
+
+VOLUME [ "/home/jenkins_home" ]
+USER jenkins
+ENTRYPOINT sleep infinity

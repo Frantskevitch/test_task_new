@@ -1,0 +1,70 @@
+version: '2'
+services:
+ jenkins_data_volume:
+  build:
+   context: .
+   dockerfile: Dockerfile.JenkinsDataVolume
+  container_name: jaj-ops-jenkins-data-volume
+
+ tomcat:
+  build:
+   context: .
+   dockerfile: Dockerfile.TomCat
+  container_name: jaj-ops-tomcat-server
+  expose: ["8080"]
+  ports: [ "8081:8080" ]
+
+ jenkins_plugins:
+  build:
+   context: .
+   dockerfile: Dockerfile.JenkinsPlugins
+  container_name: jaj-ops-jenkins-plugins
+ 
+
+ jenkins:
+  build:
+   context: .
+   dockerfile: Dockerfile.Jenkins
+  container_name: jaj-ops-jenkins-server
+  ports: 
+   - "8080:8080"
+   - "50000:50000"
+  volumes_from:
+   - jenkins_data_volume
+   - jenkins_plugins
+   - tomcat
+  depends_on:
+   - tomcat
+   - jenkins_data_volume
+   - jenkins_plugins
+ 
+ jenkins_swarm:
+  build:
+   context: .
+   dockerfile: Dockerfile.JenkinsSwarmClient
+  container_name: jaj-ops-jenkins-swarm-client
+  depends_on:
+   - tomcat
+  environment:
+   - JENKINS_PORT_8080_TCP_ADDR=jaj-ops-jenkins-server
+   - JENKINS_PORT_8080_TCP_PORT=8080
+  volumes_from:
+   - tomcat
+ 
+ jenkins_job_builder:
+  build:
+   context: .
+   dockerfile: Dockerfile.JenkinsJobsBuilder
+  container_name: jaj-ops-jenkins-job-builder
+  expose: ["8080"]
+  links:
+   - jenkins
+  volumes_from:
+   - jenkins_data_volume
+   - jenkins_plugins
+  depends_on:
+   - jenkins
+   - jenkins_data_volume
+   - jenkins_plugins
+   - jenkins_swarm
+
